@@ -15,14 +15,22 @@ class MostlyLikeableJavaPluginSpec extends Specification {
 
     def setup() {
         buildFile = testProjectDir.newFile('build.gradle')
-        buildFile << """
+        buildFile << '''
             plugins {
                 id "mostlylikeable-java"
             }
-        """
+
+            tasks.register("printJavaVersion") {
+                doLast {
+                    println "java:"
+                    println "  source-version: ${java.sourceCompatibility}"
+                    println "  target-version: ${java.targetCompatibility}"
+                }
+            }
+        '''
     }
 
-    def "java plugin is added"() {
+    def "java plugin applied"() {
         when:
         BuildResult result = createRunner()
             .withArguments("tasks", "--all")
@@ -33,18 +41,7 @@ class MostlyLikeableJavaPluginSpec extends Specification {
         result.output.contains("jar - Assembles a jar archive containing the main classes.")
     }
 
-    def "java versions defaulted"() {
-        setup:
-        buildFile << '''
-            tasks.register("printJavaVersion") {
-                doLast {
-                    println "java:"
-                    println "  source-version: ${java.sourceCompatibility}"
-                    println "  target-version: ${java.targetCompatibility}"
-                }
-            }
-        '''
-
+    def "compatibility is defaulted"() {
         when:
         BuildResult result = createRunner()
             .withArguments("printJavaVersion")
@@ -52,25 +49,15 @@ class MostlyLikeableJavaPluginSpec extends Specification {
 
         then:
         result.task(":printJavaVersion").outcome == SUCCESS
-        result.output.contains("source-version: 11")
-        result.output.contains("target-version: 11")
+        result.output.contains("source-version: 1.8")
+        result.output.contains("target-version: 1.8")
     }
 
-    def "java versions can be overridden via plugin"() {
+    def "compatibility can be set via plugin"() {
         setup:
         buildFile << '''
-            import org.gradle.api.JavaVersion
-            
             mostlylikeableJava {
-                javaCompatibility = JavaVersion.VERSION_11
-            }
-
-            tasks.register("printJavaVersion") {
-                doLast {
-                    println "java:"
-                    println "  source-version: ${java.sourceCompatibility}"
-                    println "  target-version: ${java.targetCompatibility}"
-                }
+                javaCompatibility = org.gradle.api.JavaVersion.VERSION_11
             }
         '''
 
@@ -85,22 +72,11 @@ class MostlyLikeableJavaPluginSpec extends Specification {
         result.output.contains("target-version: 11")
     }
 
-    def "java versions can be overridden via java plugin"() {
+    def "does not override java plugin source setting"() {
         setup:
         buildFile << '''
-            import org.gradle.api.JavaVersion
-            
             java {
-                sourceCompatibility = JavaVersion.VERSION_1_9
-                targetCompatibility = JavaVersion.VERSION_1_9
-            }
-
-            tasks.register("printJavaVersion") {
-                doLast {
-                    println "java:"
-                    println "  source-version: ${java.sourceCompatibility}"
-                    println "  target-version: ${java.targetCompatibility}"
-                }
+                sourceCompatibility = org.gradle.api.JavaVersion.VERSION_1_9
             }
         '''
 
@@ -111,7 +87,28 @@ class MostlyLikeableJavaPluginSpec extends Specification {
 
         then:
         result.task(":printJavaVersion").outcome == SUCCESS
+        result.output.contains("Compatibility is set in java plugin. Using that instead.")
         result.output.contains("source-version: 1.9")
+        result.output.contains("target-version: 1.9")
+    }
+
+    def "does not override java plugin target setting"() {
+        setup:
+        buildFile << '''
+            java {
+                targetCompatibility = org.gradle.api.JavaVersion.VERSION_1_9
+            }
+        '''
+
+        when:
+        BuildResult result = createRunner()
+            .withArguments("printJavaVersion")
+            .build()
+
+        then:
+        result.task(":printJavaVersion").outcome == SUCCESS
+        result.output.contains("Compatibility is set in java plugin. Using that instead.")
+        result.output.contains("source-version: 11")
         result.output.contains("target-version: 1.9")
     }
 

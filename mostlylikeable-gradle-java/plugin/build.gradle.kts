@@ -6,7 +6,7 @@ plugins {
 
 group = "mostlylikeable.java"
 
-val functionalTest: SourceSet by sourceSets.creating
+val integrationTest: SourceSet by sourceSets.creating
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.KOTLIN}")
@@ -16,23 +16,23 @@ dependencies {
     testImplementation("org.spockframework:spock-junit4")
     testImplementation("junit:junit:4.13.1")
 
-    "functionalTestImplementation"(project)
-    "functionalTestImplementation"(platform("org.spockframework:spock-bom:2.0-groovy-3.0"))
-    "functionalTestImplementation"("org.spockframework:spock-core")
-    "functionalTestImplementation"("org.spockframework:spock-junit4")
-    "functionalTestImplementation"("junit:junit:4.13.1")
+    "integrationTestImplementation"(project)
+    "integrationTestImplementation"(platform("org.spockframework:spock-bom:2.0-groovy-3.0"))
+    "integrationTestImplementation"("org.spockframework:spock-core")
+    "integrationTestImplementation"("org.spockframework:spock-junit4")
+    "integrationTestImplementation"("junit:junit:4.13.1")
 }
 
-val functionalTestTask = tasks.register<Test>("functionalTest") {
-    description = "Runs the functional tests."
+val integrationTestTask = tasks.register<Test>("integrationTest") {
+    description = "Runs the integration tests."
     group = "verification"
-    testClassesDirs = functionalTest.output.classesDirs
-    classpath = functionalTest.runtimeClasspath
+    testClassesDirs = integrationTest.output.classesDirs
+    classpath = integrationTest.runtimeClasspath
     mustRunAfter(tasks.test)
 }
 
 tasks.check {
-    dependsOn(functionalTestTask)
+    dependsOn(integrationTestTask)
 }
 
 tasks.withType<Test>().configureEach {
@@ -40,7 +40,7 @@ tasks.withType<Test>().configureEach {
 }
 
 gradlePlugin {
-    testSourceSets(functionalTest)
+    testSourceSets(integrationTest)
     plugins {
         create("MostlyLikeableJavaPlugin") {
             id = "mostlylikeable-java"
