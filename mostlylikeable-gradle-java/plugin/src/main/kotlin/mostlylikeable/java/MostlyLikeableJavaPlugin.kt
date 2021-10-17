@@ -14,8 +14,9 @@ open class MostlyLikeableJavaPlugin : Plugin<Project> {
             plugins.apply(JavaPlugin::class.java)
 
             val ext = extensions.create(EXT_NAME, MostlyLikeableJavaExtension::class.java)
+
             extensions.configure(JavaPluginExtension::class.java) {
-                it.sourceCompatibility = ext.javaVersion
+                it.sourceCompatibility = ext.getCompatibilityOrDefault()
                 it.targetCompatibility = it.sourceCompatibility
             }
         }

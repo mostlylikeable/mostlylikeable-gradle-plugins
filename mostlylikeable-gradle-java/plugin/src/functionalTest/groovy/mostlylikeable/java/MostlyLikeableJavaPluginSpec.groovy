@@ -52,18 +52,17 @@ class MostlyLikeableJavaPluginSpec extends Specification {
 
         then:
         result.task(":printJavaVersion").outcome == SUCCESS
-        result.output.contains("source-version: 1.8")
-        result.output.contains("target-version: 1.8")
+        result.output.contains("source-version: 11")
+        result.output.contains("target-version: 11")
     }
 
-    def "java versions can be overridden"() {
+    def "java versions can be overridden via plugin"() {
         setup:
         buildFile << '''
             import org.gradle.api.JavaVersion
             
-            java {
-                sourceCompatibility = JavaVersion.VERSION_11
-                targetCompatibility = JavaVersion.VERSION_11
+            mostlylikeableJava {
+                javaCompatibility = JavaVersion.VERSION_11
             }
 
             tasks.register("printJavaVersion") {
@@ -84,6 +83,36 @@ class MostlyLikeableJavaPluginSpec extends Specification {
         result.task(":printJavaVersion").outcome == SUCCESS
         result.output.contains("source-version: 11")
         result.output.contains("target-version: 11")
+    }
+
+    def "java versions can be overridden via java plugin"() {
+        setup:
+        buildFile << '''
+            import org.gradle.api.JavaVersion
+            
+            java {
+                sourceCompatibility = JavaVersion.VERSION_1_9
+                targetCompatibility = JavaVersion.VERSION_1_9
+            }
+
+            tasks.register("printJavaVersion") {
+                doLast {
+                    println "java:"
+                    println "  source-version: ${java.sourceCompatibility}"
+                    println "  target-version: ${java.targetCompatibility}"
+                }
+            }
+        '''
+
+        when:
+        BuildResult result = createRunner()
+            .withArguments("printJavaVersion")
+            .build()
+
+        then:
+        result.task(":printJavaVersion").outcome == SUCCESS
+        result.output.contains("source-version: 1.9")
+        result.output.contains("target-version: 1.9")
     }
 
     private GradleRunner createRunner() {
