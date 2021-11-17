@@ -37,6 +37,7 @@ fun includePluginBuild(name: String) {
 // TODO: iterate through layout and include these dynamically
 // libs
 includeLibraryBuild("gradle-kotlin-dsl-ext")
+includeLibraryBuild("gradle-plugin-test-spock")
 includeLibraryBuild("gradle-testkit-ext")
 
 // NOTE: the order these are declared matters. plugins with dependencies should be declared after the plugin they

@@ -3,6 +3,7 @@ plugins {
     id("mostlylikeable.configure-repositories")
     id("mostlylikeable.project-info")
     id("mostlylikeable.functional-test-base")
+    id("mostlylikeable.integration-test-base")
     id("mostlylikeable.test-spock")
 }
 
@@ -10,7 +11,8 @@ dependencies {
     api("mostlylikeable.gradle:mostlylikeable.functional-test-base:$version")
     api("mostlylikeable.gradle:mostlylikeable.test-spock:$version")
 
-    functionalTestImplementation("mostlylikeable.gradle:gradle-testkit-ext:$version")
+    integrationTestImplementation("mostlylikeable.gradle:gradle-plugin-test-spock:$version")
+    functionalTestImplementation("mostlylikeable.gradle:gradle-plugin-test-spock:$version")
 }
 
 gradlePlugin {

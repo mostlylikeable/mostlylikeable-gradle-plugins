@@ -19,6 +19,7 @@ class SpockPlugin : Plugin<Project> {
 
 //        configurations.withType<Test>
 
+        // TODO: look into https://docs.gradle.org/current/userguide/implementing_gradle_plugins.html#providing_default_dependencies_for_plugins
         dependencies {
             configurationName("org.spockframework:spock-core:2.0-groovy-3.0")
                 .let { it as ExternalModuleDependency }

@@ -1,4 +1,4 @@
-import java.util.*
+import java.util.Properties
 
 plugins {
     id("org.gradle.kotlin.kotlin-dsl")

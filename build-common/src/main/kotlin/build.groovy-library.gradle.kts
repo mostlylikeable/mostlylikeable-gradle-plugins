@@ -1,9 +1,9 @@
-import org.gradle.kotlin.dsl.repositories
 import java.util.Properties
 
 plugins {
     id("org.gradle.kotlin.kotlin-dsl")
     `java-library`
+    groovy
 }
 
 val props = Properties().let {
