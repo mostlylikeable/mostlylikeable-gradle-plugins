@@ -22,14 +22,11 @@ fun includeLibraryBuild(name: String) {
 }
 
 fun includePluginBuild(name: String) {
-    // substitute the lib so other plugins can include in dependencies, so they can apply this one
+    // substitute the lib so other plugins can include in dependencies and apply it
     includeBuild("plugins/$name") {
         dependencySubstitution {
-//            substitute(module("mostlylikeable.gradle:mostlylikeable.$name"))
             substitute(module("mostlylikeable.gradle:mostlylikeable.$name"))
                 .using(project(":"))
-//            substitute(module("mostlylikeable.gradle:$name"))
-//                .using(project(":"))
         }
     }
 }
