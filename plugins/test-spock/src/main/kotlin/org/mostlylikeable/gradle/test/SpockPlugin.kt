@@ -14,13 +14,13 @@ class SpockPlugin : Plugin<Project> {
 
     override fun apply(project: Project): Unit = project.run {
         apply<GroovyPlugin>()
+        apply<JUnitPlugin>()
 
         // TODO: look into https://docs.gradle.org/current/userguide/implementing_gradle_plugins.html#providing_default_dependencies_for_plugins
         dependencies {
             configurationName("org.spockframework:spock-core:2.0-groovy-3.0")
                 .let { it as ExternalModuleDependency }
                 .exclude(group = "org.codehaus.groovy")
-            configurationName("org.junit.jupiter:junit-jupiter:5.7.1")
         }
     }
 }

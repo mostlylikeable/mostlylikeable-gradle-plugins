@@ -8,11 +8,11 @@ plugins {
 }
 
 dependencies {
-    api("mostlylikeable.gradle:mostlylikeable.functional-test-base:$version")
-    api("mostlylikeable.gradle:mostlylikeable.test-spock:$version")
+    api("$group:mostlylikeable.functional-test-base:$version")
+    api("$group:mostlylikeable.test-spock:$version")
 
-    integrationTestImplementation("mostlylikeable.gradle:gradle-plugin-test-spock:$version")
-    functionalTestImplementation("mostlylikeable.gradle:gradle-plugin-test-spock:$version")
+    integrationTestImplementation("$group:gradle-plugin-test-spock:$version")
+    functionalTestImplementation("$group:gradle-plugin-test-spock:$version")
 }
 
 gradlePlugin {

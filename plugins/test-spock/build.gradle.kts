@@ -5,6 +5,8 @@ plugins {
 }
 
 dependencies {
+    api("$group:mostlylikeable.test-junit:$version")
+
     implementation("mostlylikeable.gradle:gradle-kotlin-dsl-ext:$version")
 }
 

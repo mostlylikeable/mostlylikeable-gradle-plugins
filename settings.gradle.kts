@@ -1,8 +1,11 @@
+import org.gradle.internal.impldep.org.apache.ivy.core.IvyPatternHelper.substitute
+
 rootProject.name = "mostlylikeable-gradle-plugins"
 
 pluginManagement {
     resolutionStrategy {
         eachPlugin {
+            println("resolve: $requested")
             if (requested.id.id.startsWith("mostlylikeable.")) {
                 useModule("mostlylikeable.gradle:${requested.id.id}:${requested.version}")
             }
@@ -34,6 +37,7 @@ fun includePluginBuild(name: String) {
 // TODO: iterate through layout and include these dynamically
 // libs
 includeLibraryBuild("gradle-kotlin-dsl-ext")
+includeLibraryBuild("gradle-plugin-test-junit")
 includeLibraryBuild("gradle-plugin-test-spock")
 includeLibraryBuild("gradle-testkit-ext")
 
@@ -44,6 +48,9 @@ includePluginBuild("configure-repositories")
 includePluginBuild("project-info")
 
 // plugins
+includePluginBuild("compile-lombok")
+
+includePluginBuild("test-junit")
 includePluginBuild("test-spock")
 
 includePluginBuild("integration-test-base")
